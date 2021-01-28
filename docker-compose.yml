@@ -3,6 +3,7 @@ version: '3.9'
 services:
   vidly:
     build: .
+    image: ${DOCKERHUB_USERNAME}/vidly-frontend:${BUILD_NUMBER}
     networks:
       - vidly-app
     environment:
