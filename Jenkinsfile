@@ -11,7 +11,7 @@ pipeline {
   stages('Test') {
     steps {
       sh "docker-compose run --service-ports vidly-frontend npm test -- --forceExit"
-      sh "docker-compose down"
+      sh "docker-compose down --rmi all"
     }
   }
   stages('Publish') {
