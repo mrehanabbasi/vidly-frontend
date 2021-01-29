@@ -18,7 +18,7 @@ pipeline {
       steps {
         script {
           docker.withRegistry( '', registryCredential ) {
-            sh "docker tag ${DOCKERHUB_USERNAME}/${JOB_NAME}:${BUILD_NUMBER} ${DOCKERHUB_USERNAME}/${JOB_NAME}:latest"
+            sh "docker tag ${DOCKERHUB_USERNAME}/vidly-frontend:${BUILD_NUMBER} ${DOCKERHUB_USERNAME}/${JOB_NAME}:latest"
             sh "docker push ${DOCKERHUB_USERNAME}/${JOB_NAME}:latest"
             sh "docker push ${DOCKERHUB_USERNAME}/${JOB_NAME}:${BUILD_NUMBER}"
           }
