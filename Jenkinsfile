@@ -4,17 +4,17 @@ pipeline {
   }
   agent any
   stages {
-    stages('Build') {
+    stage('Build') {
       steps {
         sh "docker-compose up -d"
       }
     }
-    stages('Test') {
+    stage('Test') {
       steps {
         sh "docker-compose run --service-ports vidly-frontend npm test -- --forceExit"
       }
     }
-    stages('Publish') {
+    stage('Publish') {
       steps {
         script {
           docker.withRegistry( '', registryCredential ) {
