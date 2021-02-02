@@ -50,6 +50,7 @@ jobs:
           echo "Image: $IMAGE_REPO"
           echo "::set-output name=image::$IMAGE_REPO"
           echo "::set-output name=image_name::$IMAGE_NAME"
+          echo "::set-output name=image_id::$IMAGE_ID"
           echo REPO=$IMAGE_NAME >> $GITHUB_ENV
           echo IMAGE=$(echo "$REGISTRY/$IMAGE_ID") >> $GITHUB_ENV
 
@@ -79,13 +80,10 @@ jobs:
         #   cache-to: type=inline
         #   tags: ${{ env.IMAGE }}
         run: |
-          docker tag ${DOCKERHUB_USERNAME}/${{ github.event.repository.name }}:${BUILD_NUMBER} ${IMAGE_NAME}:latest
-          docker tag ${DOCKERHUB_USERNAME}/${{ github.event.repository.name }}:${BUILD_NUMBER} ${IMAGE_ID}
-          docker push ${IMAGE_NAME}:latest
-          docker push ${IMAGE_ID}
-
-      - name: Cleanup
-        run: docker-compose down --rmi all
+          docker tag ${DOCKERHUB_USERNAME}/${{ github.event.repository.name }}:${BUILD_NUMBER} $${{ steps.generate_vars.outputs.image_name }}:latest
+          docker tag ${DOCKERHUB_USERNAME}/${{ github.event.repository.name }}:${BUILD_NUMBER} ${{ steps.generate_vars.outputs.image_id }}
+          docker push ${{ steps.generate_vars.outputs.image_name }}:latest
+          docker push ${{ steps.generate_vars.outputs.image_id }}
 
       - name: Notify Failure
         if: failure()
