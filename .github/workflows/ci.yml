@@ -4,6 +4,7 @@ on:
   pull_request:
 
 env:
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   BUILD_NUMBER: $GITHUB_RUN_NUMBER
 
 jobs:
