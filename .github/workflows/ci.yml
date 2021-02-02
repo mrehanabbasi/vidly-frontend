@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Test application code
-        run: docker-compose up -d --exit-code-from web
+        run: docker-compose up -d --exit-code-from ${{ github.repository }}
 
       - name: Test application code
         run: docker-compose run ${{ github.repository }} npm test -- --watchAll=false
