@@ -5,7 +5,7 @@ on:
 
 env:
   DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-  BUILD_NUMBER: $GITHUB_RUN_NUMBER
+  BUILD_NUMBER: ${{ github.run_number }}
 
 jobs:
   Build-Test-and-Push-Image:
@@ -79,8 +79,8 @@ jobs:
         #   cache-to: type=inline
         #   tags: ${{ env.IMAGE }}
         run: |
-          docker tag ${DOCKERHUB_USERNAME}/${{ github.repository }}:${BUILD_NUMBER} ${IMAGE_NAME}:latest
-          docker tag ${DOCKERHUB_USERNAME}/${{ github.repository }}:${BUILD_NUMBER} ${IMAGE_ID}
+          docker tag ${DOCKERHUB_USERNAME}/${{ github.event.repository.name }}:${BUILD_NUMBER} ${IMAGE_NAME}:latest
+          docker tag ${DOCKERHUB_USERNAME}/${{ github.event.repository.name }}:${BUILD_NUMBER} ${IMAGE_ID}
           docker push ${IMAGE_NAME}:latest
           docker push ${IMAGE_ID}
 
