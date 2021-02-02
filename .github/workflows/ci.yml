@@ -92,5 +92,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          message: '@${{ github.actor }} The pipeline failed! You'd better fix it fast! [Build](https://github.com/${{ github.repository }}/commit/${{ github.event.pull_request.head.sha }}/checks) has FAILED!'
+          message: '@${{ github.actor }} The pipeline failed! You should better fix it fast! [Build](https://github.com/${{ github.repository }}/commit/${{ github.event.pull_request.head.sha }}/checks) has FAILED!'
           allow-repeats: false
