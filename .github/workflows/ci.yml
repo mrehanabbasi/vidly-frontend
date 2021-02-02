@@ -23,10 +23,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Test application code
-        run: docker-compose up -d --exit-code-from ${{ github.repository }}
+        run: docker-compose up -d --exit-code-from ${{ github.event.repository.name }}
 
       - name: Test application code
-        run: docker-compose run ${{ github.repository }} npm test -- --watchAll=false
+        run: docker-compose run ${{ github.event.repository.name }} npm test -- --watchAll=false
 
       - name: Initialize Pipeline
         uses: mshick/add-pr-comment@v1
@@ -42,7 +42,7 @@ jobs:
           # Just Tag
           IMAGE_TAG=gha-${BUILD_NUMBER}
           # Just Image name
-          IMAGE_NAME=${{ github.repository }}-ci-cd
+          IMAGE_NAME=${{ github.event.repository.name }}-ci-cd
           #Image ID= Name + Tag
           IMAGE_ID=$IMAGE_NAME:$IMAGE_TAG
           IMAGE_REPO=$REGISTRY/$IMAGE_ID
