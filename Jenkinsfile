@@ -11,7 +11,7 @@ pipeline {
     }
     stage('Test') {
       steps {
-        sh "docker-compose run vidly npm test -- --watchAll=false"
+        sh "docker-compose run vidly-frontend npm test -- --watchAll=false"
       }
     }
     stage('Publish') {
