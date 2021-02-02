@@ -23,8 +23,8 @@ jobs:
       - name: Checkout out code in workflow
         uses: actions/checkout@v2
 
-      - name: Test application code
-        run: docker-compose up -d --exit-code-from ${{ github.event.repository.name }}
+      - name: Run application code
+        run: docker-compose up -d
 
       - name: Test application code
         run: docker-compose run ${{ github.event.repository.name }} npm test -- --watchAll=false
