@@ -52,38 +52,42 @@ jobs:
           echo "::set-output name=image_name::$IMAGE_NAME"
           echo "::set-output name=image_id::$IMAGE_ID"
           echo REPO=$IMAGE_NAME >> $GITHUB_ENV
+          echo IMAGE_ID=$IMAGE_ID >> $GITHUB_ENV
           echo IMAGE=$(echo "$REGISTRY/$IMAGE_ID") >> $GITHUB_ENV
+          echo IMAGE_TAG=$IMAGE_TAG >> $GITHUB_ENV
 
       # - name: Set up QEMU
       #   uses: docker/setup-qemu-action@v1
       # - name: Set up Docker Buildx
       #   uses: docker/setup-buildx-action@v1
-      - name: Login to registry
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-        run: |
-          docker tag ${DOCKERHUB_USERNAME}/${{ github.event.repository.name }}:${BUILD_NUMBER} ${{ steps.generate_vars.outputs.image_name }}:latest
-          docker tag ${DOCKERHUB_USERNAME}/${{ github.event.repository.name }}:${BUILD_NUMBER} ${{ steps.generate_vars.outputs.image_id }}
-          docker push ${{ steps.generate_vars.outputs.image_name }}:latest
-          docker push ${{ steps.generate_vars.outputs.image_id }}
+      # - name: Login to registry
+      #   uses: docker/login-action@v1
+      #   with:
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Echo Output
         run: |
           echo "Image from Output: ${{ steps.generate_vars.outputs.image }}"
           echo "Repo from Output: ${{ steps.generate_vars.outputs.image_name }}"
+          echo "Image ID from Output: ${{ steps.generate_vars.outputs.image_id }}"
           echo "Image from Env:  ${{ env.IMAGE }}"
           echo "Repo from Env:  ${{ env.REPO }}"
+          echo "Image ID from Env:  ${{ env.IMAGE_ID }}"
 
-      # - name: Build and Push Docker Image
-        # uses: docker/build-push-action@v2
-        # with:
-        #   pull: true
-        #   push: true
-        #   build-args: BUILD_PARAMETERS=${{ env.BUILD_PARAMETERS }}
-        #   cache-to: type=inline
-        #   tags: ${{ env.IMAGE }}
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: ${DOCKERHUB_USERNAME}/${{ env.REPO }}
+          tags: latest,${{ env.IMAGE_TAG }}
+          push: true
+        # run: |
+        #   docker tag ${DOCKERHUB_USERNAME}/${{ github.event.repository.name }}:${BUILD_NUMBER} ${{ env.REPO }}:latest
+        #   docker tag ${DOCKERHUB_USERNAME}/${{ github.event.repository.name }}:${BUILD_NUMBER} ${{ env.IMAGE_ID }}
+        #   docker push ${{ env.REPO }}:latest
+        #   docker push ${{ env.IMAGE_ID }}
 
       - name: Notify Failure
         if: failure()
