@@ -80,7 +80,7 @@ jobs:
         #   cache-to: type=inline
         #   tags: ${{ env.IMAGE }}
         run: |
-          docker tag ${DOCKERHUB_USERNAME}/${{ github.event.repository.name }}:${BUILD_NUMBER} $${{ steps.generate_vars.outputs.image_name }}:latest
+          docker tag ${DOCKERHUB_USERNAME}/${{ github.event.repository.name }}:${BUILD_NUMBER} ${{ steps.generate_vars.outputs.image_name }}:latest
           docker tag ${DOCKERHUB_USERNAME}/${{ github.event.repository.name }}:${BUILD_NUMBER} ${{ steps.generate_vars.outputs.image_id }}
           docker push ${{ steps.generate_vars.outputs.image_name }}:latest
           docker push ${{ steps.generate_vars.outputs.image_id }}
