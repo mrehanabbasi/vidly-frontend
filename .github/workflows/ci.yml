@@ -63,6 +63,11 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          docker tag ${DOCKERHUB_USERNAME}/${{ github.event.repository.name }}:${BUILD_NUMBER} ${{ steps.generate_vars.outputs.image_name }}:latest
+          docker tag ${DOCKERHUB_USERNAME}/${{ github.event.repository.name }}:${BUILD_NUMBER} ${{ steps.generate_vars.outputs.image_id }}
+          docker push ${{ steps.generate_vars.outputs.image_name }}:latest
+          docker push ${{ steps.generate_vars.outputs.image_id }}
 
       - name: Echo Output
         run: |
@@ -71,7 +76,7 @@ jobs:
           echo "Image from Env:  ${{ env.IMAGE }}"
           echo "Repo from Env:  ${{ env.REPO }}"
 
-      - name: Build and Push Docker Image
+      # - name: Build and Push Docker Image
         # uses: docker/build-push-action@v2
         # with:
         #   pull: true
@@ -79,11 +84,6 @@ jobs:
         #   build-args: BUILD_PARAMETERS=${{ env.BUILD_PARAMETERS }}
         #   cache-to: type=inline
         #   tags: ${{ env.IMAGE }}
-        run: |
-          docker tag ${DOCKERHUB_USERNAME}/${{ github.event.repository.name }}:${BUILD_NUMBER} ${{ steps.generate_vars.outputs.image_name }}:latest
-          docker tag ${DOCKERHUB_USERNAME}/${{ github.event.repository.name }}:${BUILD_NUMBER} ${{ steps.generate_vars.outputs.image_id }}
-          docker push ${{ steps.generate_vars.outputs.image_name }}:latest
-          docker push ${{ steps.generate_vars.outputs.image_id }}
 
       - name: Notify Failure
         if: failure()
